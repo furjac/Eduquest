@@ -87,12 +87,18 @@ def open_pdf(paper_title, paper_link):
     return redirect(paper_link)
 
 
-@app.route('/download_pdf/<paper_title>/<path:paper_link>')
-def download_pdf(paper_title, paper_link):
-    """Handles downloading PDFs from Google Drive or direct links"""
-    paper_link = unquote(paper_link)
+@app.route('/download_pdf')
+def download_pdf():
+    """Redirect to an external PDF link using query parameters"""
+    paper_title = request.args.get("title", "")
+    paper_link = unquote(request.args.get("link", ""))
+
+    # Ensure the link has a valid scheme (http/https)
+    if not paper_link.startswith(("http://", "https://")):
+        paper_link = "https://" + paper_link  # Assume HTTPS if missing
 
     return redirect(paper_link)
+
 
 
 

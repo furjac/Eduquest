@@ -211,7 +211,7 @@
                         <div class="paper-title">
                             <a href="{{ link }}" target="_blank" rel="noopener noreferrer" title="Open {{ title }}">{{ title }}</a>
                         </div>
-                        <a href="{{ url_for('download_pdf', paper_title=title, paper_link=link) }} target="_blank" rel="noopener noreferrer" 
+                        <a href="{{ url_for('download_pdf', title=title, link=link) }}" target="_blank" rel="noopener noreferrer" 
                         class="download-btn" 
                         onclick="checkDownload(event, '{{ site_name }}')">Download</a>
                     </div>
