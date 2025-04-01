@@ -92,22 +92,7 @@ def download_pdf(paper_title, paper_link):
     """Handles downloading PDFs from Google Drive or direct links"""
     paper_link = unquote(paper_link)
 
-    # Restrict downloads for MG University
-    if "mg university" in paper_title.lower():
-        return "This file is view-only. Downloading is not available yet.", 403
-
-    # Otherwise, fetch the file normally
-    response = requests.get(paper_link, stream=True)
-    if response.status_code != 200:
-        return "Error: Could not download the file", 500
-
-    filename = paper_link.split("/")[-1]
-    return send_file(
-        BytesIO(response.content),
-        as_attachment=True,
-        download_name=filename,
-        mimetype='application/pdf'
-    )
+    return redirect(paper_link)
 
 
 
