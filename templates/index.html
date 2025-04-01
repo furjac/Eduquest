@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduquest - Select Course</title>
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;  /* Ensures the body takes full height of the viewport */
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            width: 100%;
+            padding: 40px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: clamp(16px, 3vw, 24px);
+            font-weight: 400;
+        }
+
+        /* Form Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: -20px;
+        }
+
+        .container h2 {
+            color: #333;
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        /* Improved Dropdown Style */
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            background-color: white;
+            appearance: none; /* Removes default dropdown styling */
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Custom Dropdown Arrow */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: "▼";
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #555;
+            pointer-events: none;
+        }
+
+        /* Button Styling */
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 6px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.02);
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            header {
+                padding: 30px 15px;
+            }
+            .container {
+                max-width: 90%;
+                padding: 20px;
+                margin-top: 10px;
+            }
+        }
+
+        /* Footer Styling */
+        footer {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto; /* This ensures the footer stays at the bottom */
+            font-size: 14px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Eduquest</h1>
+        <h2>Your Gateway to Question Papers</h2>
+    </header>
+
+    <div class="container">
+        <h2>Select a Course to Fetch Question Papers</h2>
+        
+        <form id="course-form" method="GET" action="{{ url_for('result') }}">
+            <label for="course-select">Choose a Course:</label>
+            <div class="select-wrapper">
+                <select id="course-select" name="course">
+                    {% for course in courses %}
+                        <option value="{{ course }}">{{ course }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button id="submit-btn" type="submit">Get Question Papers</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made with Love 💖 by <a href="https://github.com/furjac" target="_blank">Furjack</a></p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('course-form');
+        const button = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', function() {
+            button.textContent = "Fetching...";
+            button.disabled = true;
+        });
+    </script>
+    
+</body>
+</html>

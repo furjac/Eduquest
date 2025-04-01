@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Papers for {{ course }}</title>
+    <style>
+        /* Reset some basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        #loading {
+            font-size: 1.5rem;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .paper-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .paper-item {
+            background-color: #fff;
+            padding: 30px 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 85%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.6s ease-in-out, box-shadow 0.3s ease, opacity 0.6s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .paper-item.floating {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .paper-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .paper-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .paper-title a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .paper-title a:hover {
+            color: #007bff;
+        }
+
+        .college-name {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .download-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .paper-item {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .paper-item {
+                width: 100%;
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .download-btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+        label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-right: 10px;
+            color: #444;
+        }
+
+        select {
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        select:hover {
+            border-color: #007bff;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            select {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Question Papers for {{ course }}</h1>
+
+        <div style="margin-bottom: 20px;">
+            <label for="college-filter">College:</label>
+            <select id="college-filter">
+                <option value="all">All Colleges</option>
+                {% for site_name, _ in papers_data %}
+                    <option value="{{ site_name }}">{{ site_name }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="semester-filter">Semester:</label>
+            <select id="semester-filter">
+                <option value="all">All Semesters</option>
+                {% for sem in semesters %}
+                    <option value="{{ sem }}">Semester {{ sem }}</option>
+                {% endfor %}
+            </select>
+        </div>        
+
+        <div id="loading">Loading question papers...</div>
+        <div class="paper-list">
+            {% for site_name, papers in papers_data %}
+                {% for title, link, semester in papers %}
+                    <div class="paper-item" data-semester="{{ semester }}">
+                        <div class="college-name">{{ site_name }}</div>
+                        <div class="paper-title">
+                            <a href="{{ link }}" target="_blank" rel="noopener noreferrer" title="Open {{ title }}">{{ title }}</a>
+                        </div>
+                        <a href="{{ url_for('download_pdf', paper_title=title, paper_link=link) }}" 
+                        class="download-btn" 
+                        onclick="checkDownload(event, '{{ site_name }}')">Download</a>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("loading").style.display = "none";
+        let paperItems = document.querySelectorAll(".paper-item");
+
+        let observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("floating");
+                }
+            });
+        }, { threshold: 0.1 });
+
+        paperItems.forEach(item => observer.observe(item));
+
+        function applyFilters() {
+            let selectedSemester = document.getElementById("semester-filter").value;
+            let selectedCollege = document.getElementById("college-filter").value;
+
+            paperItems.forEach(item => {
+                let itemSemester = item.getAttribute("data-semester");
+                let itemCollege = item.querySelector(".college-name").textContent.trim();
+
+                let semesterMatch = (selectedSemester === "all" || itemSemester === selectedSemester);
+                let collegeMatch = (selectedCollege === "all" || itemCollege === selectedCollege);
+
+                if (semesterMatch && collegeMatch) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+        document.getElementById("semester-filter").addEventListener("change", applyFilters);
+        document.getElementById("college-filter").addEventListener("change", applyFilters);
+    });
+
+
+        function checkDownload(event, siteName) {
+            if (siteName.toLowerCase().includes("mg university")) {
+                event.preventDefault();
+                alert("This file is view-only. Downloading is not available yet.");
+            }
+        }
+    </script>
+</body>
+</html>
