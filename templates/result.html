@@ -212,8 +212,7 @@
                             <a href="{{ link }}" target="_blank" rel="noopener noreferrer" title="Open {{ title }}">{{ title }}</a>
                         </div>
                         <a href="{{ url_for('download_pdf', title=title, link=link) }}" target="_blank" rel="noopener noreferrer" 
-                        class="download-btn" 
-                        onclick="checkDownload(event, '{{ site_name }}')">Download</a>
+                        class="download-btn">Download</a>
                     </div>
                 {% endfor %}
             {% endfor %}
@@ -257,14 +256,6 @@
         document.getElementById("semester-filter").addEventListener("change", applyFilters);
         document.getElementById("college-filter").addEventListener("change", applyFilters);
     });
-
-
-        function checkDownload(event, siteName) {
-            if (siteName.toLowerCase().includes("mg university")) {
-                event.preventDefault();
-                alert("This file is view-only. Downloading is not available yet.");
-            }
-        }
     </script>
 </body>
 </html>
